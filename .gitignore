@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Build
+.next/
+dist/
+build/
+*.egg-info/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+API_SPEC.md
+FEATURES_ROADMAP.md
+MOCK_DATA_STRATEGY.md
+PRODUCT_VISION.md
+RISK_ENGINE.md
+SYSTEM_ARCHITECTURE.md
+UI_UX_GUIDELINES.md
+DATA_MODEL.md
