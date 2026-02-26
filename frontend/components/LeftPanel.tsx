@@ -1,8 +1,12 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import type { LeaderboardEntry } from '@/app/types';
 import type { UpcomingElection } from '@/lib/api';
+import TimelineSlider from './TimelineSlider';
+import AlertsPanel from './AlertsPanel';
+import type { CountryWithPSI } from '@/app/types';
 
 const RISK_CLASSES: Record<string, string> = {
   Stable: 'text-psi-stable',
@@ -15,11 +19,31 @@ const RISK_CLASSES: Record<string, string> = {
 interface LeftPanelProps {
   leaderboard: LeaderboardEntry[];
   upcomingElections: UpcomingElection[];
+  countries: CountryWithPSI[];
 }
 
-export default function LeftPanel({ leaderboard, upcomingElections }: LeftPanelProps) {
+export default function LeftPanel({ leaderboard, upcomingElections, countries }: LeftPanelProps) {
+  const [search, setSearch] = useState('');
+  const filteredLeaderboard = useMemo(() => {
+    if (!search.trim()) return leaderboard;
+    const q = search.toLowerCase();
+    return leaderboard.filter((e) => e.country_name.toLowerCase().includes(q));
+  }, [leaderboard, search]);
+
   return (
     <div className="absolute left-4 top-4 bottom-24 w-72 flex flex-col gap-4 z-10">
+      {/* Search */}
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search countries..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full glass-panel rounded-lg px-3 py-2 pl-8 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-neon-blue"
+        />
+        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm">⌕</span>
+      </div>
+
       {/* Risk Leaderboard */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -31,7 +55,7 @@ export default function LeftPanel({ leaderboard, upcomingElections }: LeftPanelP
           Global Risk Leaderboard
         </h3>
         <div className="space-y-2 max-h-48 overflow-y-auto">
-          {leaderboard.map((entry) => (
+          {filteredLeaderboard.map((entry) => (
             <div
               key={entry.country_id}
               className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-800/50 transition-colors"
@@ -45,6 +69,9 @@ export default function LeftPanel({ leaderboard, upcomingElections }: LeftPanelP
           ))}
         </div>
       </motion.div>
+
+      <TimelineSlider countries={countries} />
+      <AlertsPanel countries={countries} />
 
       {/* Upcoming Elections (60-day window) */}
       <motion.div

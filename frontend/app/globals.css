@@ -4,11 +4,30 @@
 
 :root {
   --bg-dark: #0a0e17;
+  --bg-light: #f1f5f9;
   --glass: rgba(15, 23, 42, 0.6);
+  --glass-light: rgba(241, 245, 249, 0.85);
   --glass-border: rgba(148, 163, 184, 0.1);
+  --glass-border-light: rgba(148, 163, 184, 0.25);
   --neon-green: #39ff14;
   --neon-red: #ff073a;
   --neon-blue: #00d4ff;
+}
+
+html.light {
+  --bg-primary: var(--bg-light);
+  --glass: var(--glass-light);
+  --glass-border: var(--glass-border-light);
+}
+
+html.light body {
+  background: var(--bg-light);
+  color: #1e293b;
+}
+
+html.light .glass-panel {
+  background: var(--glass-light);
+  border-color: var(--glass-border-light);
 }
 
 * {

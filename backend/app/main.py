@@ -211,6 +211,12 @@ def get_timeline(days: int = Query(30, ge=1, le=90), db: Session = Depends(get_d
     ]
 
 
+@app.get("/alerts", response_model=list[AlertResponse])
+def list_alerts(db: Session = Depends(get_db)):
+    """List all active alerts."""
+    return db.query(Alert).order_by(Alert.created_at.desc()).all()
+
+
 @app.post("/alerts", response_model=AlertResponse)
 def create_alert(alert: AlertCreate, db: Session = Depends(get_db)):
     """Create alert for country PSI threshold."""
@@ -219,6 +225,17 @@ def create_alert(alert: AlertCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_alert)
     return db_alert
+
+
+@app.delete("/alerts/{alert_id}")
+def delete_alert(alert_id: int, db: Session = Depends(get_db)):
+    """Delete an alert."""
+    alert = db.query(Alert).filter(Alert.id == alert_id).first()
+    if not alert:
+        raise HTTPException(status_code=404, detail="Alert not found")
+    db.delete(alert)
+    db.commit()
+    return {"ok": True}
 
 
 # WebSocket /live - streams PSI updates and breaking events

@@ -8,6 +8,8 @@ import type { CountryWithPSI, CountryDetail, LeaderboardEntry } from '@/app/type
 import LeftPanel from '@/components/LeftPanel';
 import RightPanel from '@/components/RightPanel';
 import NewsTicker from '@/components/NewsTicker';
+import ThemeToggle from '@/components/ThemeToggle';
+import ExportButton from '@/components/ExportButton';
 
 const Globe = dynamic(() => import('@/components/Globe'), {
   ssr: false,
@@ -96,18 +98,22 @@ export default function Home() {
   return (
     <main className="relative h-screen w-screen overflow-hidden">
       <Globe countries={countries} onCountryClick={handleCountryClick} />
-      <LeftPanel leaderboard={leaderboard} upcomingElections={upcomingElections} />
+      <LeftPanel leaderboard={leaderboard} upcomingElections={upcomingElections} countries={countries} />
       <AnimatePresence>
         <RightPanel country={selectedCountry} onClose={() => setSelectedCountry(null)} />
       </AnimatePresence>
       <NewsTicker />
 
       {/* Header */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
-        <h1 className="text-lg font-bold text-white/90 tracking-widest uppercase">
-          Global Election & Political Stability Command Center
-        </h1>
-        <p className="text-xs text-slate-500 text-center mt-1">PSI • Real-time • Intelligence</p>
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <h1 className="text-lg font-bold text-white/90 tracking-widest uppercase">
+            Global Election & Political Stability Command Center
+          </h1>
+          <ExportButton countries={countries} leaderboard={leaderboard} />
+        </div>
+        <p className="text-xs text-slate-500 text-center">PSI • Real-time • Intelligence</p>
       </div>
     </main>
   );
